@@ -1,0 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+target_hash="$1"
+input=$(cat /dev/stdin)
+echo "$input" | md5sum --quiet -c <(echo "$1 *-")
+echo "$input" | bash
