@@ -1,6 +1,8 @@
-#!/bin/bash
-set -euo pipefail
-target_hash="$1"
+#!/bin/sh
+set -e
+prog=$(basename "$0")
+error() { echo "$1" >&2; exit 1; }
+[ -n "$1" ] || error "usage: $prog <expected MD5 hash of STDIN>"
 input=$(cat /dev/stdin)
-echo "$input" | md5sum --quiet -c <(echo "$1 *-")
-echo "$input" | bash
+[ "$(echo "$input" | md5sum | cut -d' ' -f1)" = "$1" ] || error "$prog: MD5 hashes do not match"
+echo "$input"
