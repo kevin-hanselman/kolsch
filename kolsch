@@ -2,7 +2,9 @@
 set -e
 prog=$(basename "$0")
 error() { echo "$1" >&2; exit 1; }
-[ -n "$1" ] || error "usage: $prog <expected MD5 hash of STDIN>"
+[ -n "$1" ] || error "usage: $prog <expected checksum of STDIN> [checksum program, md5sum by default]"
+chksum=md5sum
+[ -n "$2" ] && chksum="$2"
 input=$(cat /dev/stdin)
-[ "$(echo "$input" | md5sum | cut -d' ' -f1)" = "$1" ] || error "$prog: MD5 hashes do not match"
+[ "$(echo "$input" | $chksum | cut -d' ' -f1)" = "$1" ] || error "$prog: checksums ($chksum) do not match"
 echo "$input"
